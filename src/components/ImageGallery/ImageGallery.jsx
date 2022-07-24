@@ -11,7 +11,6 @@ import PropTypes from 'prop-types';
 
 export default function ImageGallery({ onLoadMore, page, galleryName }) {
   const [gallery, setGallery] = useState([]);
-  // const [error, setError] = useState(null);
   const [status, setStatus] = useState('idle');
   const [resolve, setResolve] = useState(null);
   const [errors, setErrors] = useState('');
@@ -40,7 +39,7 @@ export default function ImageGallery({ onLoadMore, page, galleryName }) {
 
         setResolve(resolve.data.hits.length);
         if (resolve.data.hits.length === 0) {
-          toast.error('Что-то пашло не так :( ');
+          toast.error('Что-то пoшло не так :( ');
           return;
         }
       } catch (error) {
@@ -61,20 +60,10 @@ export default function ImageGallery({ onLoadMore, page, galleryName }) {
     setShowModal(!showModal);
   };
 
-  if (status === 'idle') {
-    return <div>Начните поиск!</div>;
-  }
-
-  if (resolve === 0) {
-    return <NotFound galleryName={galleryName} />;
-  }
-
-  if (status === 'rejected') {
-    return <h2>{errors}</h2>;
-  }
-
   return (
     <>
+      {resolve === 0 && <NotFound galleryName={galleryName} />}
+      {status === 'idle' && <div>Начните поиск!</div>}
       <Gallery>
         {gallery.map(image => (
           <ImageGalleryItem
@@ -96,6 +85,7 @@ export default function ImageGallery({ onLoadMore, page, galleryName }) {
       </Gallery>
       {isLoader && <Loader />}
       {resolve >= 12 && <LoadMore Click={onLoadMore} />}
+      {status === 'rejected' && <h2>{errors}</h2>}
     </>
   );
 }
