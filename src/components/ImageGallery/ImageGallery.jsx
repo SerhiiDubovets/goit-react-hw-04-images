@@ -11,7 +11,7 @@ import PropTypes from 'prop-types';
 
 export default function ImageGallery({ onLoadMore, page, galleryName }) {
   const [gallery, setGallery] = useState([]);
-  const [error, setError] = useState(null);
+  // const [error, setError] = useState(null);
   const [status, setStatus] = useState('idle');
   const [resolve, setResolve] = useState(null);
   const [errors, setErrors] = useState('');
@@ -48,10 +48,16 @@ export default function ImageGallery({ onLoadMore, page, galleryName }) {
       try {
         setStatus('pending');
         const resolve = await getGallery(galleryName, page);
+        setIsLoader(false);
         setStatus('resolved');
+
         setGallery(galleryName => [...galleryName, ...resolve.data.hits]);
 
         setResolve(resolve.data.hits.length);
+        if (resolve.data.hits.length === 0) {
+          toast.error('Что-то пашло не так (: ');
+          return;
+        }
       } catch (error) {
         setStatus('rejected');
         setErrors(error.message);
@@ -210,10 +216,10 @@ export default function ImageGallery({ onLoadMore, page, galleryName }) {
 //         gallery: [...prevProps.gallery, ...resolve.data.hits],
 //         status: 'resolved',
 //       }));
-//       if (resolve.data.hits.length === 0) {
-//         toast.error('Что-то пашло не так (: ');
-//         return;
-//       }
+// if (resolve.data.hits.length === 0) {
+//   toast.error('Что-то пашло не так (: ');
+//   return;
+// }
 //     } catch (error) {
 //       this.setState({ status: 'rejected', errors: error.message });
 //     }
