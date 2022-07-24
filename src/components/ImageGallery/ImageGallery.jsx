@@ -95,7 +95,7 @@ export default function ImageGallery({ onLoadMore, page, galleryName }) {
         )}
       </Gallery>
       {isLoader && <Loader />}
-      {resolve >= 11 && <LoadMore Click={onLoadMore} />}
+      {resolve >= 12 && <LoadMore Click={onLoadMore} />}
     </>
   );
 }
