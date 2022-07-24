@@ -92,8 +92,8 @@ export default function ImageGallery({ onLoadMore, page, galleryName }) {
     setShowModal(!showModal);
   };
 
-  if (galleryName === '') {
-    return <div>Введите поиск!</div>;
+  if (status === 'idle') {
+    return <div>Начните поиск!</div>;
   }
 
   if (resolve === 0) {
