@@ -10,8 +10,6 @@ export default function App() {
 
   const handleSearchGallery = galleryName => {
     setGalleryName(galleryName);
-    console.log(galleryName);
-    console.log(prevState => galleryName);
 
     setPage(1);
   };
