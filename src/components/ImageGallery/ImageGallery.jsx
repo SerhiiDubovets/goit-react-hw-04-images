@@ -15,29 +15,11 @@ export default function ImageGallery({ onLoadMore, page, galleryName }) {
   const [status, setStatus] = useState('idle');
   const [resolve, setResolve] = useState(null);
   const [errors, setErrors] = useState('');
-  // const [name, setName] = useState('');
+  const [name, setName] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [modalImg, setModalImg] = useState('');
   const [modalAlt, setModalAlt] = useState('');
   const [isLoader, setIsLoader] = useState(false);
-
-  // useEffect(() => {
-  //   async function hendleFirstFetch() {
-  //     try {
-  //       setStatus('pending');
-  //       const resolve = await getGallery(galleryName, numberPage);
-  //       setStatus('resolved');
-  //       setGallery(resolve.data.hits);
-  //       setResolve(resolve.data.hits.length);
-  //       // console.log(this.state.gallery);
-  //     } catch (error) {
-  //       setStatus('rejected');
-  //       setErrors(error.message);
-  //       console.log(error.message);
-  //     }
-  //   }
-  //   hendleFirstFetch();
-  // }, []);
 
   useEffect(() => {
     if (galleryName === '') {
@@ -46,16 +28,16 @@ export default function ImageGallery({ onLoadMore, page, galleryName }) {
 
     async function hendleFetch() {
       try {
-        setStatus('pending');
+        setIsLoader(true);
         const resolve = await getGallery(galleryName, page);
         setIsLoader(false);
         setStatus('resolved');
 
-        setGallery(galleryName => [...galleryName, ...resolve.data.hits]);
+        setGallery(prevGallery => [...prevGallery, ...resolve.data.hits]);
 
         setResolve(resolve.data.hits.length);
         if (resolve.data.hits.length === 0) {
-          toast.error('Что-то пашло не так (: ');
+          toast.error('Что-то пашло не так :( ');
           return;
         }
       } catch (error) {
@@ -66,7 +48,6 @@ export default function ImageGallery({ onLoadMore, page, galleryName }) {
     }
     hendleFetch();
   }, [galleryName, page]);
-
   //   async componentDidUpdate(prevProps, prevState) {
   // if (prevProps.galleryName !== this.props.galleryName) {
   //   this.setState({ page: 1, gallery: [], isLoader: true });
@@ -111,12 +92,12 @@ export default function ImageGallery({ onLoadMore, page, galleryName }) {
     setShowModal(!showModal);
   };
 
-  if (resolve === 0) {
-    return <NotFound galleryName={galleryName} />;
+  if (galleryName === '') {
+    return <div>Введите поиск!</div>;
   }
 
-  if (status === 'pending' || isLoader) {
-    return <Loader />;
+  if (resolve === 0) {
+    return <NotFound galleryName={galleryName} />;
   }
 
   if (status === 'rejected') {
@@ -145,6 +126,7 @@ export default function ImageGallery({ onLoadMore, page, galleryName }) {
             />
           )}
         </Gallery>
+        {isLoader && <Loader />}
         {resolve >= 12 && <LoadMore Click={onLoadMore} />}
       </>
     );
